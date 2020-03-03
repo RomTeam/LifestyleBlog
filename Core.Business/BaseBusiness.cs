@@ -14,7 +14,7 @@ namespace Core.Business
         public BaseBusiness()
         {
             DataAccess = new DataAccess();
-            preStoreName = $"sp_{typeof(T).Name}_";
+            preStoreName = $"spp_{typeof(T).Name}_";
         }
 
         public List<T> GetAll()

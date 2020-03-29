@@ -7,5 +7,6 @@ namespace Core.Business.Interfaces
 {
     public interface ICategory<T> : IBusiness<T> where T : new()
     {
+        List<RefData> GetParents();
     }
 }

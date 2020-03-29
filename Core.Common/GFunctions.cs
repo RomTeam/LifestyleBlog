@@ -42,7 +42,10 @@ namespace Core.Common
                             else
                                 obj = Convert.ChangeType(obj, p.PropertyType);
                         }
-                        p.SetValue(t, obj, null);
+                        if(p.CanWrite)
+                        {
+                            p.SetValue(t, obj, null);
+                        }
                     }
                 }
                 return t;

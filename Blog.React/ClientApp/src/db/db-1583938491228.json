@@ -1,0 +1,25 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "code": "M1",
+      "name": "IP12",
+      "price": "2000$",
+      "status": true
+    },
+    {
+      "id": 2,
+      "code": "S1",
+      "name": "Samsung Galaxy S20",
+      "price": "1500$",
+      "status": true
+    },
+    {
+      "id": 3,
+      "code": "M1",
+      "name": "Nokia 1800",
+      "price": "600$",
+      "status": false
+    }
+  ]
+}

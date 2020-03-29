@@ -9,32 +9,43 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.React.Controllers
 {
-    [Route("api/controller/action")]
+    [Route("api/[controller]/[action]/{id?}")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
         private ICategory<Category> _category;
-        public CategoryController(ICategory<Category> category)
+        public CategoryController(ICategory<Category> cateogory)
         {
-            _category = category;
+            _category = cateogory;
         }
-
+        [HttpGet]
         public List<Category> GetAll()
         {
-            Category category = new Category()
-            {
-                Name = "test",
-                IsShow = true,
-                CreatedBy = 1,
-                Parent = 1,
-                Type = "header",
-                Url = "abc.kdfjd",
-                IsDelete = true,
-                Order = 1,
-                ID = 1
-            };
+            return _category.GetAll();
+        }
+
+        [HttpGet]
+        public Category GetById(int id)
+        {
+            return _category.GetById(id);
+        }
+
+        [HttpPost]
+        public void AddUpdate(Category category)
+        {
             _category.AddUpdate(category);
-            return new List<Category>();
+        }
+
+        [HttpDelete]
+        public void Delete(int id)
+        {
+            _category.Delete(id);
+        }
+
+        [HttpGet]
+        public List<RefData> GetParent()
+        {
+            return _category.GetParents();
         }
     }
 }

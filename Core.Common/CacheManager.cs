@@ -19,9 +19,9 @@ namespace Core.Common
             MemoryCache memoryCache = MemoryCache.Default;
             if (memoryCache.Contains(key))
             {
-                return null;
+                return MemoryCache.Default.Get(key);
             }
-            return MemoryCache.Default.Get(key);
+            return null;
         }
 
         

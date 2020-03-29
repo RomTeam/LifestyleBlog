@@ -33,6 +33,10 @@ namespace Blog.React
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                                                                    .AllowAnyMethod()
+                                                                     .AllowAnyHeader()));
+            services.AddMvc(mvc => mvc.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +59,7 @@ namespace Blog.React
 
             app.UseRouting();
 
+            app.UseCors("AllowAll");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -70,6 +75,13 @@ namespace Blog.React
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
+            });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

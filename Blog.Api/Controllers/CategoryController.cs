@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Business.Interfaces;
+using Core.Domain.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Core.Common;
+using Core.Domain.Models;
 
 namespace Blog.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/controller/action")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        public ICategory _category;
-        public CategoryController(ICategory category)
+        public ICategory<Category> _category;
+        public CategoryController(ICategory<Category> category)
         {
-            var categories = _category.categories();
             _category = category;
         }
-        public IActionResult GetCategory()
+        public List<Category> GetCategory()
         {
-            
-            return null;
+            return _category.GetAll();
         }
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Runtime.Caching;
 
 namespace Core.DAL
 {
@@ -12,7 +13,6 @@ namespace Core.DAL
         string connString = string.Empty;
         public DataAccess()
         {
-            string connectionString = CacheManager.GetValue(Constants.ConnnectionString).ToString();
             if(!CacheManager.IsExistKey(Constants.ConnnectionString))
             {
                 IConfigurationBuilder builder = new ConfigurationBuilder();

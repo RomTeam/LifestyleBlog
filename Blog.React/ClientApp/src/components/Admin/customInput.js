@@ -1,31 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import { REQUIRED_RULE } from "../../constants/validationRules";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
+import {
+  makeStyles,
+  TextField,
+  FormControl,
+  InputLabel,
+  Input,
+  Select,
+  FormHelperText
+} from "@material-ui/core";
 // @material-ui/icons
-import Clear from "@material-ui/icons/Clear";
-import Check from "@material-ui/icons/Check";
+import { Clear, Check } from "@material-ui/icons";
 // core components
 import styles from "../../assets/jss/admin-theme/components/customInputStyle";
-import { Select } from "@material-ui/core";
+import callApi from "../../utils/callApi";
+import { useParams } from "react-router-dom";
+import CheckValidation from "../../utils/validation";
 
 const useStyles = makeStyles(styles);
 
 export default function CustomInput(props) {
-  const [error, setError] = useState(false);
-  const [success, setSucess] = useState(false);
-  const onChange = e => {
-    let val = e.target.value;
-    if (isRequired) {
-      setError(!val);
-      setSucess(val);
-    }
-  };
-
   const classes = useStyles();
   const {
     formControlProps,
@@ -35,13 +32,24 @@ export default function CustomInput(props) {
     inputProps,
     type,
     dataSource,
-    isRequired,
-    defaultValue
+    dataType,
+    name,
+    value,
+    onChange,
+    validations
   } = props;
 
+  //-------STATE----------------------------------
+  const [error, setError] = useState(false);
+  const [success, setSucess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isRequired, setIsRequired] = useState(false);
+  let [dsDropDown, setDsDropDown] = useState([]);
+  //-------END STATE------------------------------
   const labelClasses = classNames({
     [" " + classes.labelRootError]: error,
-    [" " + classes.labelRootSuccess]: success && !error
+    [" " + classes.labelRootSuccess]: success && !error,
+    [" " + classes.labelRoot]: true
   });
   const underlineClasses = classNames({
     [classes.underlineError]: error,
@@ -51,69 +59,120 @@ export default function CustomInput(props) {
   const marginTop = classNames({
     [classes.marginTop]: labelText === undefined
   });
-
+  //-------FUNCTION---------------------------------
+  const onTextChange = e => {
+    let target = e.target;
+    if (validations) {
+      let rule = CheckValidation(validations, target.value);
+      setError(!!rule?.ruleName);
+      setErrorMsg(rule?.errorMessage);
+    }
+    onChange(e);
+  };
+  useEffect(() => {
+    setIsRequired(false);
+    if (validations) {
+      let hasRequiredRule = validations.findIndex(
+        r => r.ruleName === REQUIRED_RULE
+      );
+      setIsRequired(hasRequiredRule !== -1);
+    }
+    if (dataSource) {
+      if (dataSource.source) setDsDropDown(dataSource.source);
+      else {
+        callApi(dataSource.url)
+          .then(res => {
+            setDsDropDown(res.data.data);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    }
+  }, []);
   const renderControl = () => {
     switch (type) {
       case "select": {
         return (
-          <Select
-            onChange={onchange}
-            classes={{
-              root: marginTop,
-              disabled: classes.disabled,
-              underline: underlineClasses
-            }}
-            id={id}
-            //{...inputProps}
-          >
-            <option aria-label="None" value=""></option>
-            {dataSource.map((item, key) => {
-              return (
-                <option key={key} value={item.value}>
-                  {item.text}
-                </option>
-              );
-            })}
-          </Select>
+          <Fragment>
+            {labelText !== undefined ? (
+              <InputLabel
+                error={error}
+                required={isRequired}
+                shrink
+                htmlFor={id}
+                {...labelProps}
+                className={classes.labelRoot}
+              >
+                {labelText}
+              </InputLabel>
+            ) : null}
+            <Select
+              native
+              required={isRequired}
+              error={error}
+              value={value}
+              name={name}
+              onChange={onTextChange}
+              // classes={{
+              //   root: marginTop,
+              //   disabled: classes.disabled,
+              //   underline: underlineClasses
+              // }}
+              id={id}
+              inputProps={{
+                datatype: dataType
+              }}
+            >
+              <option aria-label="None" value=""></option>
+              {dsDropDown.map((item, key) => {
+                return (
+                  <option key={key} value={item.value}>
+                    {item.text}
+                  </option>
+                );
+              })}
+            </Select>
+            <FormHelperText error={true}>
+              {error ? errorMsg : ""}
+            </FormHelperText>
+          </Fragment>
         );
       }
       default: {
         return (
-          <Input
+          <TextField
+            label={labelText}
+            value={value}
+            required={isRequired}
+            error={error}
+            name={name}
             classes={{
-              root: marginTop,
-              disabled: classes.disabled,
-              underline: underlineClasses
+              //root: marginTop,
+              //disabled: classes.disabled,
+              //underline: underlineClasses
+            }}
+            inputProps={{
+              datatype: dataType
             }}
             id={id}
-            {...inputProps}
-            onChange={onChange}
+            onChange={onTextChange}
+            InputLabelProps={{
+              shrink: true
+            }}
+            helperText={error ? errorMsg : ""}
           />
         );
       }
     }
   };
+  //-------END FUNCTION------------------------------
   return (
     <FormControl
       {...formControlProps}
       className={formControlProps.className + " " + classes.formControl}
     >
-      {labelText !== undefined ? (
-        <InputLabel
-          className={classes.labelRoot + labelClasses}
-          htmlFor={id}
-          {...labelProps}
-        >
-          {labelText}
-        </InputLabel>
-      ) : null}
-
       {renderControl()}
-      {error ? (
-        <Clear className={classes.feedback + " " + classes.labelRootError} />
-      ) : success ? (
-        <Check className={classes.feedback + " " + classes.labelRootSuccess} />
-      ) : null}
     </FormControl>
   );
 }
@@ -125,5 +184,6 @@ CustomInput.propTypes = {
   inputProps: PropTypes.object,
   formControlProps: PropTypes.object,
   error: PropTypes.bool,
-  success: PropTypes.bool
+  success: PropTypes.bool,
+  onChange: PropTypes.func
 };

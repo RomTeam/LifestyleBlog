@@ -1,63 +1,132 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
+import { Link } from "react-router-dom";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableBody,
+  TableCell,
+} from "@material-ui/core";
+import Button from "../../components/Admin/button";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 // core components
-import styles from '../../assets/jss/admin-theme/components/tableStyle'
+import styles from "../../assets/jss/admin-theme/components/tableStyle";
+import CustomPagination from "./pagination";
 
 const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
+  const {
+    tableData,
+    tableHeaderColor,
+    tableRefs,
+    config,
+    onPaging,
+    totalRows,
+    onDelete,
+    onSort,
+  } = props;
+
+  let [sortExp, setSortExp] = useState({
+    col: "CreatedDate",
+    sortClick: 0,
+  });
+
+  const onSortClick = (colName) => {
+    let strOrder = "CreatedDate Asc";
+    if (sortExp.col != colName) sortExp.sortClick = 0;
+    if (sortExp.sortClick < 2) {
+      sortExp.col = colName;
+      sortExp.sortClick += 1;
+      strOrder =
+        sortExp.sortClick === 1 ? `[${colName}] asc` : `[${colName}] desc`;
+    } else {
+      setSortExp({
+        col: "CreatedDate",
+        sortClick: 0,
+      });
+      strOrder = "CreatedDate desc";
+    }
+    onSort(strOrder);
+  };
+
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor, tableRefs } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
-        {tableHead !== undefined ? (
-          <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
-            <TableRow className={classes.tableHeadRow}>
-              {tableHead.map((prop, key) => {
-                return (
-                  <TableCell
-                    className={classes.tableCell + " " + classes.tableHeadCell}
-                    key={key}
-                  >
-                    {prop}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-        ) : null}
+        <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
+          <TableRow className={classes.tableHeadRow}>
+            {config.header.map((prop, key) => {
+              return (
+                <TableCell
+                  className={classes.tableCell + " " + classes.tableHeadCell}
+                  key={key}
+                >
+                  {prop.isSort ? (
+                    <div
+                      className={classes.dflex}
+                      onClick={() => {
+                        onSortClick(prop.sortCol);
+                      }}
+                    >
+                      {/* <ArrowDownwardIcon fontSize="small" className={classes.hide}/>
+                      <ArrowUpwardIcon fontSize="small"/> */}
+                      {prop.label}
+                    </div>
+                  ) : (
+                    prop.label
+                  )}
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        </TableHead>
         <TableBody>
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                {
-                  tableRefs.map((index, key) => {
+                {tableRefs.map((index, key) => {
                   return (
                     <TableCell className={classes.tableCell} key={key}>
                       {prop[index]}
                     </TableCell>
                   );
                 })}
+                <TableCell>
+                  <Link to={`${config.url.details}/${prop.id}`}>
+                    <Button color="success" size="sm">
+                      Details
+                    </Button>
+                  </Link>
+                  <Link to={`${config.url.addupdate}/${prop.id}`}>
+                    <Button color="warning" size="sm">
+                      Update
+                    </Button>
+                  </Link>
+                  <Button
+                    color="danger"
+                    size="sm"
+                    onclick={onDelete.bind(this, prop.id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
+      <CustomPagination onPaging={onPaging} totalRows={totalRows} />
     </div>
   );
 }
 
-
 CustomTable.defaultProps = {
-  tableHeaderColor: "gray"
+  tableHeaderColor: "gray",
 };
 
 CustomTable.propTypes = {
@@ -68,8 +137,8 @@ CustomTable.propTypes = {
     "success",
     "info",
     "rose",
-    "gray"
+    "gray",
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
+  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 };

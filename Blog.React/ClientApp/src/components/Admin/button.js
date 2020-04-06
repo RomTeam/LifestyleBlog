@@ -25,6 +25,7 @@ export default function RegularButton(props) {
     justIcon,
     className,
     muiClasses,
+    onclick,
     ...rest
   } = props;
   const btnClasses = classNames({
@@ -40,7 +41,7 @@ export default function RegularButton(props) {
     [className]: className
   });
   return (
-    <Button {...rest} classes={muiClasses} className={btnClasses}>
+    <Button {...rest} classes={muiClasses} className={btnClasses} onClick={onclick}>
       {children}
     </Button>
   );
@@ -55,7 +56,8 @@ RegularButton.propTypes = {
     "danger",
     "rose",
     "white",
-    "transparent"
+    "transparent",
+    "gray"
   ]),
   size: PropTypes.oneOf(["sm", "lg"]),
   simple: PropTypes.bool,

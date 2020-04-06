@@ -24,7 +24,7 @@ export default function CardHeader(props) {
     [className]: className !== undefined
   });
   return (
-    <div className={cardHeaderClasses} {...rest}>
+    <div className={cardHeaderClasses}>
       {children}
     </div>
   );

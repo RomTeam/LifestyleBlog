@@ -1,7 +1,6 @@
 ﻿using Core.Business.Interfaces;
 using Core.Common;
 using Core.DAL;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -17,33 +16,68 @@ namespace Core.Business
             preStoreName = $"spp_{typeof(T).Name}_";
         }
 
-        public List<T> GetAll()
+        public ApiResponse<List<T>> GetAll(ApiRequest apiRequest)
         {
             ParameterCollection paramIn = new ParameterCollection();
-            return DataAccess.GetDataTable(preStoreName + "GetAll", paramIn).To<T>();
+            paramIn.IsPaging(false);
+            ApiResponse<List<T>> response = new ApiResponse<List<T>>()
+            {
+                Status = StatusCode.Success,
+                Data = DataAccess.GetDataTable(preStoreName + "GetAll", paramIn).To<T>()
+            };
+            return response;
         }
-        public T GetById(int Id)
+
+        public ApiResponse<List<T>> GetAll(ApiRequest<string> apiRequest, out int totalRows)
         {
             ParameterCollection paramIn = new ParameterCollection();
-            paramIn.Add("@ID", Id);
-            return DataAccess.GetRecord(preStoreName + "GetByID", paramIn).To<T>();
+            paramIn.AddPagingInfo(apiRequest.Paging);
+            paramIn.Add("@searchText", apiRequest.Body);
+            ApiResponse<List<T>> response = new ApiResponse<List<T>>()
+            {
+                Status = StatusCode.Success,
+                Data = DataAccess.GetDataTable(preStoreName + "GetAll", paramIn, out totalRows).To<T>()
+            };
+            return response;
+
         }
-        public void Delete(int Id)
+
+        public ApiResponse<T> GetById(ApiRequest<int> apiRequest)
         {
             ParameterCollection paramIn = new ParameterCollection();
-            paramIn.Add("@ID", Id);
+            paramIn.Add("@ID", apiRequest.Body);
+            return new ApiResponse<T>()
+            {
+                Status = StatusCode.Success,
+                Data = DataAccess.GetRecord(preStoreName + "GetByID", paramIn).To<T>()
+            };
+        }
+        public ApiResponse<int> Delete(ApiRequest<int> apiRequest)
+        {
+            ParameterCollection paramIn = new ParameterCollection();
+            paramIn.Add("@ID", apiRequest.Body);
             DataAccess.ExecuteNonQuery(preStoreName + "Delete", paramIn);
+            return new ApiResponse<int>()
+            {
+                Status = StatusCode.Success,
+                Data = apiRequest.Body
+            };
+
         }
-        public void AddUpdate(T data)
+        public ApiResponse AddUpdate(ApiRequest<T> apiRequest)
         {
             ParameterCollection paramIn = new ParameterCollection();
             IEnumerable<PropertyInfo> properties = typeof(T).GetProperties();
             foreach (var p in properties)
             {
-                paramIn.Add("@" + p.Name, p.GetValue(data));
+                paramIn.Add("@" + p.Name, p.GetValue(apiRequest.Body));
             }
 
             DataAccess.ExecuteNonQuery(preStoreName + "AddUpdate", paramIn);
+            return new ApiResponse()
+            {
+                Status = StatusCode.Success
+            };
         }
     }
 }

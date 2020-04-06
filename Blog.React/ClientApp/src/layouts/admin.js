@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import Sidebar from "../components/Admin/sidebar";
 import Footer from "../components/Admin/footer";
-
+import "../assets/css/admin.css";
 let ps;
 const switchRoutes = (
   <Switch>

@@ -9,10 +9,14 @@ namespace Core.Business
 {
     public class CategoryBusiness: BaseBusiness<Category>, ICategory<Category>
     {
-        public List<RefData> GetParents()
+        public ApiResponse<List<RefData>> GetParents()
         {
             ParameterCollection paramIn = new ParameterCollection();
-            return DataAccess.GetDataTable("spp_Category_GetParent", paramIn).To<RefData>();
+            return new ApiResponse<List<RefData>>()
+            {
+                Status = StatusCode.Success,
+                Data = DataAccess.GetDataTable("spp_Category_GetParent", paramIn).To<RefData>()
+            };
         }
     }
 }

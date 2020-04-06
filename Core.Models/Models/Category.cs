@@ -11,6 +11,10 @@ namespace Core.Domain.Models
         public int Parent { get; set; }
         public string Url { get; set; }
         public int Order { get; set; }
+    }
+
+    public class CategoryFilter
+    {
 
     }
 }

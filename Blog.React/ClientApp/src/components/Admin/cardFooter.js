@@ -24,7 +24,7 @@ export default function CardFooter(props) {
     [className]: className !== undefined
   });
   return (
-    <div className={cardFooterClasses} {...rest}>
+    <div className={cardFooterClasses}>
       {children}
     </div>
   );

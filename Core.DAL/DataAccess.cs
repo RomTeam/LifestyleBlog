@@ -13,7 +13,7 @@ namespace Core.DAL
         string connString = string.Empty;
         public DataAccess()
         {
-            if(!CacheManager.IsExistKey(Constants.ConnnectionString))
+            if (!CacheManager.IsExistKey(Constants.ConnnectionString))
             {
                 IConfigurationBuilder builder = new ConfigurationBuilder();
                 builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
@@ -22,6 +22,28 @@ namespace Core.DAL
             }
             connString = CacheManager.GetValue(Constants.ConnnectionString).ToString();
         }
+        public DataTable GetDataTable(string spa, ParameterCollection parameters, out int totalRows)
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                SqlCommand com = new SqlCommand(spa, conn);
+                com.CommandType = CommandType.StoredProcedure;
+                foreach (Parameter item in parameters)
+                {
+                    if (item.IsOutput)
+                        com.Parameters.AddWithValue(item.Name, item.Value).Direction = ParameterDirection.Output;
+                    else
+                        com.Parameters.AddWithValue(item.Name, item.Value);
+
+                }
+                conn.Open();
+                DataTable dt = new DataTable();
+                dt.Load(com.ExecuteReader());
+                totalRows = Convert.ToInt32(com.Parameters["@TotalRow"].Value);
+                return dt;
+            }
+        }
+
         public DataTable GetDataTable(string spa, ParameterCollection parameters)
         {
             using (SqlConnection conn = new SqlConnection(connString))
@@ -30,7 +52,11 @@ namespace Core.DAL
                 com.CommandType = CommandType.StoredProcedure;
                 foreach (Parameter item in parameters)
                 {
-                    com.Parameters.AddWithValue(item.Name, item.Value);
+                    if (item.IsOutput)
+                        com.Parameters.AddWithValue(item.Name, item.Value).Direction = ParameterDirection.Output;
+                    else
+                        com.Parameters.AddWithValue(item.Name, item.Value);
+
                 }
                 conn.Open();
                 DataTable dt = new DataTable();

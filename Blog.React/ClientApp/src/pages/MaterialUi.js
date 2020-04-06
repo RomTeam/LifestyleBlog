@@ -16,8 +16,6 @@ const useStyle = makeStyles(theme => ({
   }));
 
 function MaterialUi(props) {
-    console.log(props);
-    console.log(useTheme());
   let stylese = useStyle();
   
   return (

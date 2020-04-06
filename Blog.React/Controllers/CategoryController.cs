@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using Core.Business.Interfaces;
+using Core.Common;
 using Core.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,34 +20,55 @@ namespace Blog.React.Controllers
         {
             _category = cateogory;
         }
-        [HttpGet]
-        public List<Category> GetAll()
+        [HttpPost]
+        public IActionResult GetAll(Pagination paging)
         {
-            return _category.GetAll();
+            ApiRequest<string> apiRequest = new ApiRequest<string>()
+            {
+                Paging = paging,
+                Body = paging.SearchText
+            };
+            ApiResponse<List<Category>> response = _category.GetAll(apiRequest, out int totalRows);
+            var categories = response.Data;
+            return Ok(new { categories, totalRows });
         }
 
         [HttpGet]
-        public Category GetById(int id)
+        public IActionResult GetById(int id)
         {
-            return _category.GetById(id);
+            ApiRequest<int> apiRequest = new ApiRequest<int>()
+            {
+                Body = id
+            };
+            ApiResponse<Category> response = _category.GetById(apiRequest);
+            return Ok(response);
         }
 
         [HttpPost]
-        public void AddUpdate(Category category)
+        public IActionResult AddUpdate(Category category)
         {
-            _category.AddUpdate(category);
+            ApiRequest<Category> apiRequest = new ApiRequest<Category>()
+            {
+                Body = category
+            };
+            ApiResponse response = _category.AddUpdate(apiRequest);
+            return Ok(response);
         }
 
         [HttpDelete]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            _category.Delete(id);
+            ApiRequest<int> apiRequest = new ApiRequest<int>()
+            {
+                Body = id
+            };
+            return Ok(_category.Delete(apiRequest));
         }
 
         [HttpGet]
-        public List<RefData> GetParent()
+        public IActionResult GetParent()
         {
-            return _category.GetParents();
+            return Ok(_category.GetParents());
         }
     }
 }

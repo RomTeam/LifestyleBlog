@@ -10,6 +10,12 @@ import {
 } from "../../admin-theme.js";
 
 const tableStyle = theme => ({
+  dflex: {
+    display: "flex"
+  },
+  hide: {
+    display: "none"
+  },
   warningTableHeader: {
     color: warningColor[0]
   },
@@ -63,7 +69,11 @@ const tableStyle = theme => ({
     color: "inherit",
     display: "table-row",
     outline: "none",
-    verticalAlign: "middle"
+    verticalAlign: "middle",
+    cursor: "pointer",
+    "& p": {
+      display: "flex"
+    },
   },
   tableBodyRow: {
     height: "48px",

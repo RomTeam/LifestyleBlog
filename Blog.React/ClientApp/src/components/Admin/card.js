@@ -23,7 +23,7 @@ export default function Card(props) {
     [className]: className !== undefined
   });
   return (
-    <div className={cardClasses} {...rest}>
+    <div className={cardClasses}>
       {children}
     </div>
   );

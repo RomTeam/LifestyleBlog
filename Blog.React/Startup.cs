@@ -1,6 +1,7 @@
 using Core.Business;
 using Core.Business.Interfaces;
 using Core.Domain.Models;
+using Core.Domain.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,7 +25,9 @@ namespace Blog.React
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ICategory<Category>, CategoryBusiness>();
+            services.AddSingleton<ICategory<CategoryViewModel>, CategoryBusiness>();
+
+            services.AddSingleton<IBusiness<Seo>, BaseBusiness<Seo>>();
 
             services.AddControllersWithViews();
 

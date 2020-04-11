@@ -22,6 +22,7 @@ export const CategoryListConfig = {
 };
 
 export const CategoryActionConfig = {
+  entry: "Category",
   apis: {
     getDetails: "api/category/getbyid",
     addUpdate: "api/category/addupdate"
@@ -115,7 +116,7 @@ export const CateogryDetailsConfig = {
     },
     {
       colTitle: "Category Parent",
-      colData: "parent"
+      colData: "parentName"
     },
     {
       colTitle: "Url",

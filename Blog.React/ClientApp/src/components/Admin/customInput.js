@@ -36,7 +36,7 @@ export default function CustomInput(props) {
     name,
     value,
     onChange,
-    validations
+    validations,
   } = props;
 
   //-------STATE----------------------------------
@@ -114,11 +114,6 @@ export default function CustomInput(props) {
               value={value}
               name={name}
               onChange={onTextChange}
-              // classes={{
-              //   root: marginTop,
-              //   disabled: classes.disabled,
-              //   underline: underlineClasses
-              // }}
               id={id}
               inputProps={{
                 datatype: dataType
@@ -147,11 +142,6 @@ export default function CustomInput(props) {
             required={isRequired}
             error={error}
             name={name}
-            classes={{
-              //root: marginTop,
-              //disabled: classes.disabled,
-              //underline: underlineClasses
-            }}
             inputProps={{
               datatype: dataType
             }}
@@ -161,6 +151,8 @@ export default function CustomInput(props) {
               shrink: true
             }}
             helperText={error ? errorMsg : ""}
+            multiline={type === "area"}
+            rows="5"
           />
         );
       }

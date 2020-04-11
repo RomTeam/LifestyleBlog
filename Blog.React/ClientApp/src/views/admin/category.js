@@ -25,6 +25,7 @@ function Category(props) {
   };
 
   const onSearch = (searchText) => {
+    paging.PageNum = 1;
     paging.SearchText = searchText;
     props.getCategories(paging);
   }
@@ -39,12 +40,12 @@ function Category(props) {
   useEffect(() => {
     props.getCategories(paging);
     return () => {};
-  }, {});
+  }, []);
 
   return (
     <DynamicRenderList
       config={Config.CategoryListConfig}
-      tableRefs={["name", "type", "parent", "url", "order"]}
+      tableRefs={["name", "type", "parentName", "url", "order"]}
       tableData={props.categories || []}
       onDelete={onDelete}
       onPaging={onPaging}

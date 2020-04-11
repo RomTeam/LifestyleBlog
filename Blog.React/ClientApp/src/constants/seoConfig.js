@@ -1,69 +1,157 @@
+export const SeoActionConfig = {
+  apis: {
+    addUpdate: "api/seo/addupdate",
+  },
+  title: "SEO Information",
+  rows: [
+    [
+      {
+        label: "SEO Url",
+        type: "text",
+        name: "SeoUrl",
+        id: "seoUrl",
+        apiText: "seoUrl",
+        col: 6,
+      },
+      {
+        label: "SEO Title",
+        type: "text",
+        name: "title",
+        id: "title",
+        apiText: "title",
+        col: 6,
+      },
+    ],
+    [
+      {
+        label: "SEO Keywords",
+        type: "text",
+        name: "Keywords",
+        id: "keywords",
+        col: 6,
+        apiText: "keywords",
+      },
+      {
+        label: "Tags",
+        type: "text",
+        name: "Tags",
+        id: "tags",
+        col: 6,
+        apiText: "tags",
+      },
+    ],
+    [
+      {
+        label: "H1",
+        type: "text",
+        name: "H1",
+        id: "h1",
+        col: 4,
+        apiText: "h1",
+      },
+      {
+        label: "H2",
+        type: "text",
+        name: "H2",
+        id: "h2",
+        col: 4,
+        apiText: "h2",
+      },
+      {
+        label: "H3",
+        type: "text",
+        name: "H3",
+        id: "h3",
+        col: 4,
+        apiText: "h3",
+      },
+    ],
+    [
+      {
+        label: "H4",
+        type: "text",
+        name: "H4",
+        id: "h4",
+        col: 4,
+        apiText: "h4",
+      },
+      {
+        label: "H5",
+        type: "text",
+        name: "H5",
+        id: "h5",
+        col: 4,
+        apiText: "h5",
+      },
+      {
+        label: "H6",
+        type: "text",
+        name: "H6",
+        id: "h6",
+        col: 4,
+        apiText: "h6",
+      },
+    ],
+    [
+      {
+        label: "SEO Description",
+        type: "area",
+        name: "Description",
+        id: "description",
+        apiText: "description",
+        col: 12,
+      },
+    ],
+  ],
+};
 
-// export const CategoryActionConfig = {
-//     apis: {
-//       getDetails: "api/category/getbyid",
-//       addUpdate: "api/category/addupdate"
-//     },
-//     url: {
-//       list: "/admin/category"
-//     },
-//     title: "Add/Update Category",
-//     rows: [
-//       [
-//         {
-//           label: "Category Name",
-//           type: "text",
-//           name: "Name",
-//           id: "name",
-//           apiText: "name",
-//           col: 6,
-//           validations: [Validations.RequiredValidation]
-//         },
-//         {
-//           label: "Category Type",
-//           type: "select",
-//           name: "Type",
-//           id: "type",
-//           apiText: "type",
-//           col: 6,
-//           dataSource: {
-//             source: Constant.CategoryType,
-//             url: null
-//           },
-//           validations: [Validations.RequiredValidation]
-//         }
-//       ],
-//       [
-//         {
-//           label: "Parent",
-//           type: "select",
-//           name: "Parent",
-//           id: "parent",
-//           apiText: "parent",
-//           col: 4,
-//           dataType: "int",
-//           dataSource: {
-//             source: null,
-//             url: "api/category/getparent"
-//           }
-//         },
-//         {
-//           label: "Url",
-//           type: "text",
-//           name: "Url",
-//           id: "url",
-//           col: 4,
-//           apiText: "url"
-//         },
-//         {
-//           label: "Order",
-//           type: "text",
-//           dataType: "int",
-//           name: "Order",
-//           id: "order",
-//           col: 4,
-//           apiText: "order"
-//         }
-//       ]
-//     ]
-//   };
+export const SeoDetailsConfig = {
+  title: "SEO Information",
+  columns: [
+    {
+      colTitle: "SEO Url",
+      colData: "seoUrl",
+    },
+    {
+      colTitle: "Description",
+      colData: "description",
+    },
+    {
+      colTitle: "Title",
+      colData: "title",
+    },
+    {
+      colTitle: "Keywords",
+      colData: "keywords",
+    },
+    {
+      colTitle: "Tags",
+      colData: "tags",
+    },
+    
+    {
+      colTitle: "H1",
+      colData: "h1",
+    },
+    {
+      colTitle: "H2",
+      colData: "h2",
+    },
+    {
+      colTitle: "H3",
+      colData: "h3",
+    },
+    {
+      colTitle: "H4",
+      colData: "h4",
+    },
+    {
+      colTitle: "H5",
+      colData: "h5",
+    },
+    {
+      colTitle: "H6",
+      colData: "h6",
+    },
+  ],
+};

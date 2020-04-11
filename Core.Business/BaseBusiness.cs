@@ -13,7 +13,8 @@ namespace Core.Business
         public BaseBusiness()
         {
             DataAccess = new DataAccess();
-            preStoreName = $"spp_{typeof(T).Name}_";
+            string modelName = typeof(T).BaseType.Name != "Object" ? typeof(T).BaseType.Name : typeof(T).Name;
+            preStoreName = $"spp_{modelName}_";
         }
 
         public ApiResponse<List<T>> GetAll(ApiRequest apiRequest)
@@ -52,6 +53,7 @@ namespace Core.Business
                 Data = DataAccess.GetRecord(preStoreName + "GetByID", paramIn).To<T>()
             };
         }
+
         public ApiResponse<int> Delete(ApiRequest<int> apiRequest)
         {
             ParameterCollection paramIn = new ParameterCollection();
@@ -64,19 +66,25 @@ namespace Core.Business
             };
 
         }
-        public ApiResponse AddUpdate(ApiRequest<T> apiRequest)
+        public ApiResponse<string> AddUpdate(ApiRequest<T> apiRequest)
         {
             ParameterCollection paramIn = new ParameterCollection();
             IEnumerable<PropertyInfo> properties = typeof(T).GetProperties();
+
             foreach (var p in properties)
             {
-                paramIn.Add("@" + p.Name, p.GetValue(apiRequest.Body));
+                object[] attribute = p.GetCustomAttributes(typeof(IsParamAttribute), true);
+                if (attribute.Length == 0)
+                {
+                    paramIn.Add("@" + p.Name, p.GetValue(apiRequest.Body));
+                }
             }
 
-            DataAccess.ExecuteNonQuery(preStoreName + "AddUpdate", paramIn);
-            return new ApiResponse()
+            var id = DataAccess.ExecuteScalar(preStoreName + "AddUpdate", paramIn);
+            return new ApiResponse<string>()
             {
-                Status = StatusCode.Success
+                Status = StatusCode.Success,
+                Data = id.ToString(),
             };
         }
     }

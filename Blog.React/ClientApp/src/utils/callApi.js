@@ -11,3 +11,4 @@ export default function callApi(endpoint, method="Get", data= null){
     })
 
 }
+

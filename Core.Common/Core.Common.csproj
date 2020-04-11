@@ -46,6 +46,7 @@
     <Compile Include="ApiResponse.cs" />
     <Compile Include="CacheManager.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="CustomAttributes.cs" />
     <Compile Include="GFunctions.cs" />
     <Compile Include="ParameterCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

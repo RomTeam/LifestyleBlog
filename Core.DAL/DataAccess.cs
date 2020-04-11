@@ -98,5 +98,20 @@ namespace Core.DAL
                 com.ExecuteNonQuery();
             }
         }
+
+        public object ExecuteScalar(string spa, ParameterCollection parameters)
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                SqlCommand com = new SqlCommand(spa, conn);
+                com.CommandType = CommandType.StoredProcedure;
+                foreach (Parameter item in parameters)
+                {
+                    com.Parameters.AddWithValue(item.Name, item.Value);
+                }
+                conn.Open();
+                return com.ExecuteScalar();
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Core.Business.Interfaces
         ApiResponse<List<T>> GetAll(ApiRequest<string> apiRequest, out int totalRows);
         ApiResponse<T> GetById(ApiRequest<int> apiRequest);
         ApiResponse<int> Delete(ApiRequest<int> apiRequest);
-        ApiResponse AddUpdate(ApiRequest<T> apiRequest);
+        ApiResponse<string> AddUpdate(ApiRequest<T> apiRequest);
         
     }
 }

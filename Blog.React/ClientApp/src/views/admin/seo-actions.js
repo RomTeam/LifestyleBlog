@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import DynamicRenderForm from '../../utils/dynamicRenderFrom'
+import * as SeoConfig from '../../constants/seoConfig'
 
-export default function SeoActions() {
+export default function SeoActions(props) {
+    let {history} = props;
     return (
-        <div>
-            
-        </div>
+        <Fragment>
+            <DynamicRenderForm history={history} config={SeoConfig.SeoActionConfig} />
+        </Fragment>
     )
 }

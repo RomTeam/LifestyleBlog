@@ -12,9 +12,4 @@ namespace Core.Domain.Models
         public string Url { get; set; }
         public int Order { get; set; }
     }
-
-    public class CategoryFilter
-    {
-
-    }
 }

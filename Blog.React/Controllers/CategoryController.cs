@@ -6,6 +6,7 @@ using System.Web.Helpers;
 using Core.Business.Interfaces;
 using Core.Common;
 using Core.Domain.Models;
+using Core.Domain.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +16,8 @@ namespace Blog.React.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private ICategory<Category> _category;
-        public CategoryController(ICategory<Category> cateogory)
+        private ICategory<CategoryViewModel> _category;
+        public CategoryController(ICategory<CategoryViewModel> cateogory)
         {
             _category = cateogory;
         }
@@ -28,7 +29,7 @@ namespace Blog.React.Controllers
                 Paging = paging,
                 Body = paging.SearchText
             };
-            ApiResponse<List<Category>> response = _category.GetAll(apiRequest, out int totalRows);
+            ApiResponse<List<CategoryViewModel>> response = _category.GetAll(apiRequest, out int totalRows);
             var categories = response.Data;
             return Ok(new { categories, totalRows });
         }
@@ -40,18 +41,18 @@ namespace Blog.React.Controllers
             {
                 Body = id
             };
-            ApiResponse<Category> response = _category.GetById(apiRequest);
+            ApiResponse<CategoryViewModel> response = _category.GetById(apiRequest);
             return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult AddUpdate(Category category)
+        public IActionResult AddUpdate(CategoryViewModel category)
         {
-            ApiRequest<Category> apiRequest = new ApiRequest<Category>()
+            ApiRequest<CategoryViewModel> apiRequest = new ApiRequest<CategoryViewModel>()
             {
                 Body = category
             };
-            ApiResponse response = _category.AddUpdate(apiRequest);
+            ApiResponse<string> response = _category.AddUpdate(apiRequest);
             return Ok(response);
         }
 

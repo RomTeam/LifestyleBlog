@@ -21,6 +21,7 @@ namespace Blog.React.Controllers
             _business = business;
         }
 
+        [HttpPost]
         public IActionResult AddUpdate(Seo seo)
         {
             ApiRequest<Seo> apiRequest = new ApiRequest<Seo>()

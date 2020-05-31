@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 using Core.Business.Interfaces;
 using Core.Common;
 using Core.Domain.Models;
 using Core.Domain.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,28 +14,24 @@ namespace Blog.React.Controllers
 {
     [Route("api/[controller]/[action]/{id?}")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private ICategory<CategoryViewModel> _category;
-        private IWebHostEnvironment _hostingEnvironment;
-        public CategoryController(ICategory<CategoryViewModel> cateogory, IWebHostEnvironment environment)
+        private IUsers<UsersViewModel> _users;
+        public UsersController(IUsers<UsersViewModel> users)
         {
-            _category = cateogory;
-            _hostingEnvironment = environment;
+            _users = users;
         }
         [HttpPost]
         public IActionResult GetAll(Pagination paging)
         {
-            //FileProcess.SaveImageFromBase64(_hostingEnvironment.WebRootPath, "");
-
             ApiRequest<string> apiRequest = new ApiRequest<string>()
             {
                 Paging = paging,
                 Body = paging.SearchText
             };
-            ApiResponse<List<CategoryViewModel>> response = _category.GetAll(apiRequest, out int totalRows);
-            var categories = response.Data;
-            return Ok(new { categories, totalRows });
+            ApiResponse<List<UsersViewModel>> response = _users.GetAll(apiRequest, out int totalRows);
+            var users = response.Data;
+            return Ok(new { users, totalRows });
         }
 
         [HttpGet]
@@ -46,18 +41,20 @@ namespace Blog.React.Controllers
             {
                 Body = id
             };
-            ApiResponse<CategoryViewModel> response = _category.GetById(apiRequest);
+            ApiResponse<UsersViewModel> response = _users.GetById(apiRequest);
             return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult AddUpdate(CategoryViewModel category)
+        public IActionResult AddUpdate(UsersViewModel users)
         {
-            ApiRequest<CategoryViewModel> apiRequest = new ApiRequest<CategoryViewModel>()
+            users.Password = "123456";
+            users.Avatar = "avatar.jpg";
+            ApiRequest<UsersViewModel> apiRequest = new ApiRequest<UsersViewModel>()
             {
-                Body = category
+                Body = users
             };
-            ApiResponse<string> response = _category.AddUpdate(apiRequest);
+            ApiResponse<string> response = _users.AddUpdate(apiRequest);
             return Ok(response);
         }
 
@@ -68,13 +65,13 @@ namespace Blog.React.Controllers
             {
                 Body = id
             };
-            return Ok(_category.Delete(apiRequest));
+            return Ok(_users.Delete(apiRequest));
         }
 
-        [HttpGet]
-        public IActionResult GetParent()
+        [HttpPost]
+        public IActionResult UploadFile(List<FileUpload> files)
         {
-            return Ok(_category.GetParents());
+            return Ok();
         }
     }
 }

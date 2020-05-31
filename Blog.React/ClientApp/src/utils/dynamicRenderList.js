@@ -8,6 +8,8 @@ import CardBody from "./../components/Admin/cardBody";
 import CardHeader from "./../components/Admin/cardHeader";
 import { makeStyles, Icon, TextField, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import CheckIcon from '@material-ui/icons/Check';
+
 const styles = {
   cardHeader: {
     display: "flex",
@@ -60,7 +62,6 @@ const useStyles = makeStyles(styles);
 export default function DynamicRenderList(props) {
   const classes = useStyles();
   let {
-    tableRefs,
     tableData,
     config,
     onDelete,
@@ -104,7 +105,6 @@ export default function DynamicRenderList(props) {
           <CardBody>
             <Table
               tableHeaderColor="info"
-              tableRefs={tableRefs}
               tableData={tableData}
               config={config}
               onDelete={onDelete}

@@ -5,7 +5,7 @@ import DashboardPage from "./views/admin/dashboard";
 import HomePage from "./pages/Home";
 import {Dashboard,Person} from '@material-ui/icons'
 import Category from "./views/admin/category";
-import CategoryActions from './views/admin/category-actions'
+import CategoryActions from './views/admin/categoryActions'
 import ValidationCustomForm from "./components/Admin/validationForm";
 // const routes = [
 //   {

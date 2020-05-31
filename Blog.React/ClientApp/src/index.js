@@ -9,6 +9,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "./redux/reducers/rootReducer";
 import thunk from "redux-thunk";
 import { createBrowserHistory } from "history";
+import {configureStore} from '@reduxjs/toolkit'
 
 const composeEnhancers =
   typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -22,6 +23,9 @@ const enhancer = composeEnhancers(
   // other store enhancers if any
 );
 const store = createStore(rootReducer, enhancer);
+// const store = configureStore({
+//   reducer: rootReducer
+// });
 //const hist = createBrowserHistory();
 ReactDOM.render(
   <Provider store={store}>

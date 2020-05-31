@@ -1,9 +1,23 @@
 export const GET_CATEGORY_LIST = "GET_CATEGORY_LIST";
 export const DELETE_CATEGORY = "DELETE_CATEGORY";
+export const GET_USER_LIST = "GET_USER_LIST";
+export const DELETE_USER = "DELETE_USER";
+export const SAVE_FILES_TEMPORARY = "SAVE_FILES_TEMPORARY";
+export const DELETE_FILES = "DELETE_FILES";
+export function ActionGetUserList(users, totalRows) {
+  return {
+    type: GET_USER_LIST,
+    users,
+    totalRows
+  };
+}
 
-
-export const GET_PRODUCT_LIST = "GET_PRODUCT_LIST";
-export const DELETE_PRODUCT = "DELETE_PRODUCT";
+export function ActionDeleteUser(id) {
+  return {
+    type: DELETE_USER,
+    id
+  };
+}
 
 export function ActionGetCategoryList(categories, totalRows) {
   return {
@@ -20,16 +34,15 @@ export function ActionDeleteCategory(id) {
   };
 }
 
-// export function ActionGetProductList(products) {
-//   return {
-//     type: GET_PRODUCT_LIST,
-//     products
-//   };
-// }
+export function ActionSaveFiles(files) {
+  return {
+    type: SAVE_FILES_TEMPORARY,
+    files
+  };
+}
 
-// export function ActionDeleteProduct(id) {
-//   return {
-//     type: DELETE_PRODUCT,
-//     id
-//   };
-// }
+export function ActionRemoveFiles() {
+  return {
+    type: DELETE_FILES,
+  };
+}

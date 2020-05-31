@@ -64,6 +64,11 @@ const customInputStyle = {
     margin: "27px 0 0 0",
     position: "relative",
     verticalAlign: "unset"
+  },
+  ckBox: {
+    position: "absolute",
+    top: "15px",
+    left: "-13px"
   }
 };
 

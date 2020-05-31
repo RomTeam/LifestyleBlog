@@ -1,13 +1,12 @@
 import React from "react";
-import NotFound from "../../pages/NotFound";
-import ClientUI from '../../layouts/client-ui'
 import DashboardPage from "../../views/admin/dashboard";
-import HomePage from "../../pages/Home";
 import {Dashboard,Person} from '@material-ui/icons'
 import Category from '../../views/admin/category'
-import CategoryActions from '../../views/admin/category-actions'
-import ValidationCustomForm from "../../components/Admin/validationForm";
+import CategoryActions from '../../views/admin/categoryActions'
 import CategoryDetails from "../../views/admin/categoryDetails";
+import Users from "../../views/admin/users";
+import UserDetails from "../../views/admin/userDetails";
+import UserActions from "../../views/admin/userActions";
 const dashboardRoutes = [
   {
     path: "/dashboard",
@@ -50,18 +49,34 @@ const dashboardRoutes = [
     isShow: true
   },
   {
-    path: "/form",
-    name: "Form",
+    path: "/users/details/:id",
+    name: "User Details",
     icon: Person,
-    component: ValidationCustomForm,
+    component: UserDetails,
     layout: "/admin",
-    isShow: true
+    isShow: false
   },
   {
-    path: "/client",
-    name: "Client Ui",
-    icon: "content_paste",
-    component: ClientUI,
+    path: "/users/addupdate/:id",
+    name: "Add/Update User",
+    icon: Person,
+    component: UserActions,
+    layout: "/admin",
+    isShow: false
+  },
+  {
+    path: "/users/addupdate",
+    name: "Add/Update User",
+    icon: Person,
+    component: UserActions,
+    layout: "/admin",
+    isShow: false
+  },
+  {
+    path: "/users",
+    name: "Users",
+    icon: Person,
+    component: Users,
     layout: "/admin",
     isShow: true
   }

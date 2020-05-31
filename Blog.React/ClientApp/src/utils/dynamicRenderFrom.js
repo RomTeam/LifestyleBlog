@@ -39,13 +39,12 @@ export default function DynamicRenderForm(props) {
   const classes = styles();
   let { url, apis, title, rows, entry } = props.config;
   //State
-  let [itemDetails, setItemDetails] = useState();
+  let [itemDetails, setItemDetails] = useState({});
 
   useEffect(() => {
     if (id) {
       callApi(`${apis.getDetails}\\${id}`)
         .then((res) => {
-          console.log(res.data.data);
           setItemDetails(res.data.data);
         })
         .catch((err) => {
@@ -59,9 +58,9 @@ export default function DynamicRenderForm(props) {
     let seoParams = {};
     let target = e.target;
     //Collect parameters on form for Entry
-    let inputs = target.querySelectorAll("input,select");
+    let inputs = target.querySelectorAll("input,select,checkbox");
     inputs.forEach((input) => {
-      let value = input.value;
+      let value = input.type === "checkbox" ? input.checked : input.value;
       if (input.getAttribute("datatype") === "int")
         value = parseInt(!!value ? value : 0);
       params[input.name] = value;
@@ -89,8 +88,90 @@ export default function DynamicRenderForm(props) {
   const onChange = (e) => {
     let target = e.target;
     let tempItem = { ...itemDetails };
-    tempItem[target.id] = target.value;
+    if (target.type === "checkbox") {
+      tempItem[target.id] = target.checked;
+    } else tempItem[target.id] = target.value;
     setItemDetails(tempItem);
+  };
+
+  const seoInfoPanel = () => {
+    if (hasSeo && itemDetails) {
+      return (
+        <GridItem xs={12} sm={12} md={6}>
+          <Card id="seoSecion">
+            <CardHeader color={color}>
+              <h4 className={classes.cardTitleWhite}>
+                {SeoConfig.SeoActionConfig.title}
+              </h4>
+              <p className={classes.cardCategoryWhite}></p>
+            </CardHeader>
+            <CardBody>
+              {SeoConfig.SeoActionConfig.rows.map((row, index) => {
+                return (
+                  <GridContainer key={index}>
+                    {row.map((col, index) => {
+                      let colVal = itemDetails
+                        ? itemDetails[col.apiText] || ""
+                        : "";
+                      return (
+                        <GridItem xs={12} sm={12} md={col.col} key={index}>
+                          <CustomInput
+                            value={colVal}
+                            labelText={col.label}
+                            id={col.id}
+                            name={col.name}
+                            type={col.type}
+                            dataSource={col.dataSource}
+                            validations={col.validations}
+                            dataType={col.dataType}
+                            formControlProps={{
+                              fullWidth: true,
+                            }}
+                            onChange={onChange}
+                          />
+                        </GridItem>
+                      );
+                    })}
+                  </GridContainer>
+                );
+              })}
+            </CardBody>
+          </Card>
+        </GridItem>
+      );
+    }
+  };
+
+  const contentInfoPanel = () => {
+    //if (Object.keys(itemDetails).length) {
+      return rows.map((row, index) => {
+        return (
+          <GridContainer key={index}>
+            {row.map((col, index) => {
+              let colVal = itemDetails ? itemDetails[col.apiText] || "" : "";
+              return (
+                <GridItem xs={12} sm={12} md={col.col} key={index}>
+                  <CustomInput
+                    value={colVal}
+                    labelText={col.label}
+                    id={col.id}
+                    name={col.name}
+                    type={col.type}
+                    dataSource={col.dataSource}
+                    validations={col.validations}
+                    dataType={col.dataType}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    onChange={onChange}
+                  />
+                </GridItem>
+              );
+            })}
+          </GridContainer>
+        );
+      });
+    //}
   };
 
   return (
@@ -103,37 +184,7 @@ export default function DynamicRenderForm(props) {
                 <h4 className={classes.cardTitleWhite}>{title}</h4>
                 <p className={classes.cardCategoryWhite}></p>
               </CardHeader>
-              <CardBody>
-                {rows.map((row, index) => {
-                  return (
-                    <GridContainer key={index}>
-                      {row.map((col, index) => {
-                        let colVal = itemDetails
-                          ? itemDetails[col.apiText] || ""
-                          : "";
-                        return (
-                          <GridItem xs={12} sm={12} md={col.col} key={index}>
-                            <CustomInput
-                              value={colVal}
-                              labelText={col.label}
-                              id={col.id}
-                              name={col.name}
-                              type={col.type}
-                              dataSource={col.dataSource}
-                              validations={col.validations}
-                              dataType={col.dataType}
-                              formControlProps={{
-                                fullWidth: true,
-                              }}
-                              onChange={onChange}
-                            />
-                          </GridItem>
-                        );
-                      })}
-                    </GridContainer>
-                  );
-                })}
-              </CardBody>
+              <CardBody>{contentInfoPanel()}</CardBody>
               <CardFooter>
                 <FormGroup row={true}>
                   <Button type="submit" color={color}>
@@ -146,45 +197,7 @@ export default function DynamicRenderForm(props) {
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={12} md={6}>
-            <Card id="seoSecion">
-              <CardHeader color={color}>
-                <h4 className={classes.cardTitleWhite}>{SeoConfig.SeoActionConfig.title}</h4>
-                <p className={classes.cardCategoryWhite}></p>
-              </CardHeader>
-              <CardBody>
-                {SeoConfig.SeoActionConfig.rows.map((row, index) => {
-                  return (
-                    <GridContainer key={index}>
-                      {row.map((col, index) => {
-                        let colVal = itemDetails
-                          ? itemDetails[col.apiText] || ""
-                          : "";
-                        return (
-                          <GridItem xs={12} sm={12} md={col.col} key={index}>
-                            <CustomInput
-                              value={colVal}
-                              labelText={col.label}
-                              id={col.id}
-                              name={col.name}
-                              type={col.type}
-                              dataSource={col.dataSource}
-                              validations={col.validations}
-                              dataType={col.dataType}
-                              formControlProps={{
-                                fullWidth: true,
-                              }}
-                              onChange={onChange}
-                            />
-                          </GridItem>
-                        );
-                      })}
-                    </GridContainer>
-                  );
-                })}
-              </CardBody>
-            </Card>
-          </GridItem>
+          {seoInfoPanel()}
         </GridContainer>
       </form>
     </Fragment>

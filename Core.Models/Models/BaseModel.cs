@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,11 +9,8 @@ namespace Core.Domain.Models
     {
         public int ID { get; set; }
         public int CreatedBy { get; set; }
-        public DateTime CreatedDate { 
-            get {
-                return DateTime.Now;
-            } 
-        }
+        [IsParam(IsAddParam = false)]
+        public DateTime CreatedDate { get; set; }
         public bool IsShow { get; set; }
         public bool IsDelete { get; set; }
     }

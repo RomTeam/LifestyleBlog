@@ -10,12 +10,15 @@ import { Link, useParams } from "react-router-dom";
 import Button from "../components/Admin/button";
 import callApi from "./callApi";
 import * as SeoConfig from "../constants/seoConfig";
+import * as Constant from "../../src/constants/contants";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const styles = {
   typo: {
     // paddingLeft: "25%",
     marginBottom: "40px",
-    display: 'flex'
+    display: "flex",
   },
   note: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -27,10 +30,10 @@ const styles = {
     lineHeight: "13px",
     left: "0",
     width: "25%",
-    margin: "auto 0"
+    margin: "auto 0",
   },
   noteContent: {
-    maxWidth: "75% !important"
+    maxWidth: "75% !important",
   },
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -68,6 +71,62 @@ export default function DynamicRenderDetails(props) {
 
   const classes = useStyles();
   const { title, url, columns, apis } = props.config;
+
+  const seoInfoPanel = () => {
+    if (!props.hasSeo) return "";
+    return (
+      <GridItem xs={12} sm={12} md={6}>
+        <Card>
+          <CardHeader color="success">
+            <h4 className={classes.cardTitleWhite}>
+              {SeoConfig.SeoDetailsConfig.title}
+            </h4>
+          </CardHeader>
+          <CardBody>
+            {SeoConfig.SeoDetailsConfig.columns.map((col, idx) => {
+              if (typeof sources[col.colData] === "boolean") {
+                console.log(sources[col.colData]);
+              }
+              if (!col.isNotShow) {
+                console.log(sources);
+                return (
+                  <div className={classes.typo} key={idx}>
+                    <div className={classes.note}>{col.colTitle}</div>
+                    <div className={classes.noteContent}>
+                      {sources[col.colData] ?? "N/A"}
+                    </div>
+                  </div>
+                );
+              }
+            })}
+          </CardBody>
+        </Card>
+      </GridItem>
+    );
+  };
+
+  const getDisplay = (col) => {
+    
+    if (Object.entries(sources).length != 0) {
+      let val = sources[col.colData];
+      switch (col.type) {
+        case Constant.DisplayType.checkBox: {
+          return val ? (
+            <CheckCircleIcon color="primary" />
+          ) : (
+            <CancelIcon color="secondary" />
+          );
+        }
+        case Constant.DisplayType.dateTime: {
+          return (new Date(val)).toString();
+        }
+        default: {
+          return val ?? "N/A";
+        }
+      }
+    }
+  };
+
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={props.hasSeo ? 6 : 12}>
@@ -81,7 +140,7 @@ export default function DynamicRenderDetails(props) {
                 return (
                   <div className={classes.typo} key={idx}>
                     <div className={classes.note}>{col.colTitle}</div>
-                    <div className={classes.noteContent}>{sources[col.colData] ?? "N/A"}</div>
+                    <div className={classes.noteContent}>{getDisplay(col)}</div>
                   </div>
                 );
               }
@@ -100,25 +159,7 @@ export default function DynamicRenderDetails(props) {
           </CardFooter>
         </Card>
       </GridItem>
-      <GridItem xs={12} sm={12} md={6}>
-        <Card>
-          <CardHeader color="success">
-            <h4 className={classes.cardTitleWhite}>{SeoConfig.SeoDetailsConfig.title}</h4>
-          </CardHeader>
-          <CardBody>
-            {SeoConfig.SeoDetailsConfig.columns.map((col, idx) => {
-              if (!col.isNotShow) {
-                return (
-                  <div className={classes.typo} key={idx}>
-                    <div className={classes.note}>{col.colTitle}</div>
-                    <div className={classes.noteContent}>{sources[col.colData] ?? "N/A"}</div>
-                  </div>
-                );
-              }
-            })}
-          </CardBody>
-        </Card>
-      </GridItem>
+      {seoInfoPanel()}
     </GridContainer>
   );
 }

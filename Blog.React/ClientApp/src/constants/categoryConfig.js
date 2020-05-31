@@ -18,6 +18,13 @@ export const CategoryListConfig = {
     { label: "Url", sortCol: "Url", isSort: true },
     { label: "Order", sortCol: "Order", isSort: true },
     { label: "Actions", sort: "Actions", isSort: false }
+  ],
+  refData: [
+    {ref: "name"},
+    {ref: "type"},
+    {ref: "parentName"},
+    {ref: "url"},
+    {ref: "order"}
   ]
 };
 

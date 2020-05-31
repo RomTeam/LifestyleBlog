@@ -1,11 +1,12 @@
 import {combineReducers} from 'redux'
-import productProducer from './productReducer';
 import categoryReducer from './admin/categoryReducer'
-
+import userReducer from './admin/userReducer'
+import uploadFileReducer from './uploadFileReducer'
 const rootReducer = combineReducers(
     {
-        productProducer,
-        categoryReducer
+        categoryReducer,
+        userReducer,
+        uploadFileReducer
     }
 );
 

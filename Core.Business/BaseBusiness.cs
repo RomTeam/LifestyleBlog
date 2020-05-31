@@ -33,7 +33,7 @@ namespace Core.Business
         {
             ParameterCollection paramIn = new ParameterCollection();
             paramIn.AddPagingInfo(apiRequest.Paging);
-            paramIn.Add("@searchText", apiRequest.Body);
+            paramIn.Add("@SearchText", apiRequest.Body);
             ApiResponse<List<T>> response = new ApiResponse<List<T>>()
             {
                 Status = StatusCode.Success,

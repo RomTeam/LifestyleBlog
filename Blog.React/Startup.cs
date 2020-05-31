@@ -36,8 +36,11 @@ namespace Blog.React
 
             services.AddSingleton<IBusiness<Seo>, BaseBusiness<Seo>>();
 
+            services.AddSingleton<IUsers<UsersViewModel>, UsersBusiness>();
+
             services.AddControllersWithViews();
 
+            services.AddHttpContextAccessor();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
@@ -11,11 +10,12 @@ import {
   TableCell,
 } from "@material-ui/core";
 import Button from "../../components/Admin/button";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 // core components
 import styles from "../../assets/jss/admin-theme/components/tableStyle";
 import CustomPagination from "./pagination";
+import * as Constant from "../../constants/contants";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles(styles);
 
@@ -23,7 +23,6 @@ export default function CustomTable(props) {
   const {
     tableData,
     tableHeaderColor,
-    tableRefs,
     config,
     onPaging,
     totalRows,
@@ -55,6 +54,56 @@ export default function CustomTable(props) {
   };
 
   const classes = useStyles();
+
+  const getDisplayContent = (prop, refData) => {
+    let val = prop[refData.ref];
+    switch (refData.type) {
+      case Constant.DisplayType.checkBox: {
+        return (val ? <CheckCircleIcon color="primary"/> : <CancelIcon color="secondary"/>);
+      }
+      default:
+        return val;
+    }
+  };
+
+  const generateListContent = () => {
+    if(tableData.length != 0)
+    {
+      return tableData.map((prop, key) => {
+        return (
+          <TableRow key={key} className={classes.tableBodyRow}>
+            {config.refData.map((item, key) => {
+              return (
+                <TableCell className={classes.tableCell} key={key}>
+                  {getDisplayContent(prop, item)}
+                </TableCell>
+              );
+            })}
+            <TableCell>
+              <Link to={`${config.url.details}/${prop.id}`}>
+                <Button color="success" size="sm">
+                  Details
+                </Button>
+              </Link>
+              <Link to={`${config.url.addupdate}/${prop.id}`}>
+                <Button color="warning" size="sm">
+                  Update
+                </Button>
+              </Link>
+              <Button
+                color="danger"
+                size="sm"
+                onclick={onDelete.bind(this, prop.id)}
+              >
+                Delete
+              </Button>
+            </TableCell>
+          </TableRow>
+        );
+      })
+    }
+  }
+
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -73,8 +122,6 @@ export default function CustomTable(props) {
                         onSortClick(prop.sortCol);
                       }}
                     >
-                      {/* <ArrowDownwardIcon fontSize="small" className={classes.hide}/>
-                      <ArrowUpwardIcon fontSize="small"/> */}
                       {prop.label}
                     </div>
                   ) : (
@@ -86,38 +133,7 @@ export default function CustomTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {tableData.map((prop, key) => {
-            return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                {tableRefs.map((index, key) => {
-                  return (
-                    <TableCell className={classes.tableCell} key={key}>
-                      {prop[index]}
-                    </TableCell>
-                  );
-                })}
-                <TableCell>
-                  <Link to={`${config.url.details}/${prop.id}`}>
-                    <Button color="success" size="sm">
-                      Details
-                    </Button>
-                  </Link>
-                  <Link to={`${config.url.addupdate}/${prop.id}`}>
-                    <Button color="warning" size="sm">
-                      Update
-                    </Button>
-                  </Link>
-                  <Button
-                    color="danger"
-                    size="sm"
-                    onclick={onDelete.bind(this, prop.id)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {generateListContent()}
         </TableBody>
       </Table>
       <CustomPagination onPaging={onPaging} totalRows={totalRows} />
@@ -140,5 +156,5 @@ CustomTable.propTypes = {
     "gray",
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  //tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 };

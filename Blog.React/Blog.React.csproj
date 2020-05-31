@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\contants\" />
+    <Folder Include="wwwroot\admin\images\avatar\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

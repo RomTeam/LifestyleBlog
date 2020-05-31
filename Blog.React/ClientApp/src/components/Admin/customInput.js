@@ -8,16 +8,16 @@ import {
   TextField,
   FormControl,
   InputLabel,
-  Input,
+  Checkbox,
   Select,
-  FormHelperText
+  FormHelperText,
+  FormControlLabel,
 } from "@material-ui/core";
 // @material-ui/icons
 import { Clear, Check } from "@material-ui/icons";
 // core components
 import styles from "../../assets/jss/admin-theme/components/customInputStyle";
 import callApi from "../../utils/callApi";
-import { useParams } from "react-router-dom";
 import CheckValidation from "../../utils/validation";
 
 const useStyles = makeStyles(styles);
@@ -29,7 +29,6 @@ export default function CustomInput(props) {
     labelText,
     id,
     labelProps,
-    inputProps,
     type,
     dataSource,
     dataType,
@@ -38,29 +37,29 @@ export default function CustomInput(props) {
     onChange,
     validations,
   } = props;
-
   //-------STATE----------------------------------
   const [error, setError] = useState(false);
   const [success, setSucess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isRequired, setIsRequired] = useState(false);
-  let [dsDropDown, setDsDropDown] = useState([]);
+  const [dsDropDown, setDsDropDown] = useState([]);
+  const [isCheck, setIsCheck] = useState(value ? value : false);
   //-------END STATE------------------------------
   const labelClasses = classNames({
     [" " + classes.labelRootError]: error,
     [" " + classes.labelRootSuccess]: success && !error,
-    [" " + classes.labelRoot]: true
+    [" " + classes.labelRoot]: true,
   });
   const underlineClasses = classNames({
     [classes.underlineError]: error,
     [classes.underlineSuccess]: success && !error,
-    [classes.underline]: true
+    [classes.underline]: true,
   });
   const marginTop = classNames({
-    [classes.marginTop]: labelText === undefined
+    [classes.marginTop]: labelText === undefined,
   });
   //-------FUNCTION---------------------------------
-  const onTextChange = e => {
+  const onTextChange = (e) => {
     let target = e.target;
     if (validations) {
       let rule = CheckValidation(validations, target.value);
@@ -73,7 +72,7 @@ export default function CustomInput(props) {
     setIsRequired(false);
     if (validations) {
       let hasRequiredRule = validations.findIndex(
-        r => r.ruleName === REQUIRED_RULE
+        (r) => r.ruleName === REQUIRED_RULE
       );
       setIsRequired(hasRequiredRule !== -1);
     }
@@ -81,15 +80,21 @@ export default function CustomInput(props) {
       if (dataSource.source) setDsDropDown(dataSource.source);
       else {
         callApi(dataSource.url)
-          .then(res => {
+          .then((res) => {
             setDsDropDown(res.data.data);
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       }
     }
   }, []);
+
+  const onCheckBoxChange = (e) => {
+    setIsCheck(e.target.checked);
+    onChange(e);
+  };
+
   const renderControl = () => {
     switch (type) {
       case "select": {
@@ -116,7 +121,7 @@ export default function CustomInput(props) {
               onChange={onTextChange}
               id={id}
               inputProps={{
-                datatype: dataType
+                datatype: dataType,
               }}
             >
               <option aria-label="None" value=""></option>
@@ -134,6 +139,35 @@ export default function CustomInput(props) {
           </Fragment>
         );
       }
+      case "checkbox": {
+        let b = value === "" ? false : value;
+
+        return (
+          <Fragment>
+            {labelText !== undefined ? (
+              <InputLabel
+                error={error}
+                required={isRequired}
+                shrink
+                htmlFor={id}
+                {...labelProps}
+                className={classes.labelRoot}
+              >
+                {labelText}
+              </InputLabel>
+            ) : null}
+            <Checkbox
+              className={classes.ckBox}
+              checked={b}
+              color="secondary"
+              inputProps={{ "aria-label": "secondary checkbox" }}
+              onChange={onCheckBoxChange}
+              id={id}
+              name={name}
+            />
+          </Fragment>
+        );
+      }
       default: {
         return (
           <TextField
@@ -143,12 +177,12 @@ export default function CustomInput(props) {
             error={error}
             name={name}
             inputProps={{
-              datatype: dataType
+              datatype: dataType,
             }}
             id={id}
             onChange={onTextChange}
             InputLabelProps={{
-              shrink: true
+              shrink: true,
             }}
             helperText={error ? errorMsg : ""}
             multiline={type === "area"}
@@ -177,5 +211,5 @@ CustomInput.propTypes = {
   formControlProps: PropTypes.object,
   error: PropTypes.bool,
   success: PropTypes.bool,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };

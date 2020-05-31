@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import callApi from "../../utils/callApi";
-import * as CategoryAction from "../../redux/actions/adminActions";
+import * as UserActions from "../../redux/actions/adminActions";
 import DynamicRenderList from "../../utils/dynamicRenderList";
-import * as Config from "../../constants/categoryConfig";
-import Upload from "../../components/Admin/upload";
+import * as Config from "../../constants/userConfig";
 
-function Category(props) {
+function Users(props) {
   let [paging, setPaging] = useState({
     PageNum: 1,
     PageSize: 10,
     StrOrder: "CreatedDate desc",
     SearchText: '',
   });
-  let [sortExp, setSortExp] = useState("asc");
 
   const onPaging = (pageNum) => {
     paging.PageNum = pageNum;
-    props.getCategories(paging);
+    props.getUsers(paging);
   };
 
   const onSort = (strOrder) => {
     paging.StrOrder = strOrder;
-    props.getCategories(paging);
+    props.getUsers(paging);
   };
 
   const onSearch = (searchText) => {
     paging.PageNum = 1;
     paging.SearchText = searchText;
-    props.getCategories(paging);
+    props.getUsers(paging);
   }
 
   const onDelete = (id) => {
@@ -39,38 +37,37 @@ function Category(props) {
   };
 
   useEffect(() => {
-    props.getCategories(paging);
+    props.getUsers(paging);
     return () => {};
   }, []);
 
   return (
     <DynamicRenderList
-      config={Config.CategoryListConfig}
-      tableData={props.categories || []}
+      config={Config.UserListConfig}
+      tableData={props.users || []}
       onDelete={onDelete}
       onPaging={onPaging}
       onSort={onSort}
       onSearch = {onSearch}
       totalRows={props.totalRows}
     />
-    // <Upload fileLimit={10} dropzoneText="Upload Avatar"/>
   );
 }
 
 const mapStateToProps = (state) => {
   return {
-    categories: state.categoryReducer.categories,
-    totalRows: state.categoryReducer.totalRows,
+    users: state.userReducer.users,
+    totalRows: state.userReducer.totalRows,
   };
 };
 
 const mapPropToDispatch = (dispatch) => {
   return {
-    getCategories: (params) => {
-      callApi("api/category/getall", "post", params).then((res) => {
+    getUsers: (params) => {
+      callApi("api/users/getall", "post", params).then((res) => {
         dispatch(
-          CategoryAction.ActionGetCategoryList(
-            res.data.categories,
+            UserActions.ActionGetUserList(
+            res.data.users,
             res.data.totalRows
           )
         );
@@ -78,9 +75,9 @@ const mapPropToDispatch = (dispatch) => {
     },
     deleteCategory: (id) => {
       if (confirm("Please confirm to delete this record?")) {//eslint-disable-line
-        callApi(`api/category/delete/${id}`, "delete")
+        callApi(`api/users/delete/${id}`, "delete")
           .then((res) => {
-            dispatch(CategoryAction.ActionDeleteCategory(id));
+            dispatch(UserActions.ActionDeleteUser(id));
           })
           .catch((err) => {});
       }
@@ -88,4 +85,4 @@ const mapPropToDispatch = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapPropToDispatch)(Category);
+export default connect(mapStateToProps, mapPropToDispatch)(Users);

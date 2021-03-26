@@ -19,6 +19,7 @@ import { Clear, Check } from "@material-ui/icons";
 import styles from "../../assets/jss/admin-theme/components/customInputStyle";
 import callApi from "../../utils/callApi";
 import CheckValidation from "../../utils/validation";
+import Upload from "./upload";
 
 const useStyles = makeStyles(styles);
 
@@ -36,6 +37,7 @@ export default function CustomInput(props) {
     value,
     onChange,
     validations,
+    onGetImages
   } = props;
   //-------STATE----------------------------------
   const [error, setError] = useState(false);
@@ -165,6 +167,44 @@ export default function CustomInput(props) {
               id={id}
               name={name}
             />
+          </Fragment>
+        );
+      }
+      case "file": {
+        return (
+          <Fragment>
+            {labelText !== undefined ? (
+              <InputLabel
+                error={error}
+                required={isRequired}
+                shrink
+                htmlFor={id}
+                {...labelProps}
+                className={classes.labelRoot}
+              >
+                {labelText}
+              </InputLabel>
+            ) : null}
+            <Upload name={name} onUploadCompleted={onGetImages} />
+          </Fragment>
+        );
+      }
+      case "files": {
+        return (
+          <Fragment>
+            {labelText !== undefined ? (
+              <InputLabel
+                error={error}
+                required={isRequired}
+                shrink
+                htmlFor={id}
+                {...labelProps}
+                className={classes.labelRoot}
+              >
+                {labelText}
+              </InputLabel>
+            ) : null}
+            <Upload fileLimit={10} dropzoneText="Upload Images"/>
           </Fragment>
         );
       }

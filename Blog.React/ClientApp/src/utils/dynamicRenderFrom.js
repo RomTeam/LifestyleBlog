@@ -11,6 +11,7 @@ import CustomInput from "../components/Admin/customInput";
 import { Link, useParams } from "react-router-dom";
 import callApi from "./callApi";
 import * as SeoConfig from "../constants/seoConfig";
+import axios from 'axios'
 
 const styles = makeStyles((theme) => ({
   cardCategoryWhite: {
@@ -39,13 +40,15 @@ export default function DynamicRenderForm(props) {
   const classes = styles();
   let { url, apis, title, rows, entry } = props.config;
   //State
-  let [itemDetails, setItemDetails] = useState({});
-
+  let [entity, setEntity] = useState({});
+  let [seo, setSeo] = useState({});
+  let [images, setImages] = useState({});
   useEffect(() => {
     if (id) {
       callApi(`${apis.getDetails}\\${id}`)
         .then((res) => {
-          setItemDetails(res.data.data);
+          setEntity(res.data.entry);
+          setSeo(res.data.seo);
         })
         .catch((err) => {
           console.log(err);
@@ -63,9 +66,13 @@ export default function DynamicRenderForm(props) {
       let value = input.type === "checkbox" ? input.checked : input.value;
       if (input.getAttribute("datatype") === "int")
         value = parseInt(!!value ? value : 0);
+      if (images) {
+        params = {...params, ...images};
+      }
       params[input.name] = value;
     });
     params["ID"] = id ? parseInt(id) : 0;
+    console.log(params);
     let res = await callApi(apis.addUpdate, "post", params);
     //Collect params from SEO section
     if (hasSeo) {
@@ -75,7 +82,7 @@ export default function DynamicRenderForm(props) {
         seoParams[input.name] = input.value;
       });
       seoParams[entry] = parseInt(res.data.data);
-      seoParams["ID"] = id ? parseInt(itemDetails.seoID) : 0;
+      seoParams["ID"] = id ? parseInt(entity.seoID) : 0;
       await callApi(
         SeoConfig.SeoActionConfig.apis.addUpdate,
         "post",
@@ -87,15 +94,33 @@ export default function DynamicRenderForm(props) {
 
   const onChange = (e) => {
     let target = e.target;
-    let tempItem = { ...itemDetails };
+    let tempItem = { ...entity, ...seo };
     if (target.type === "checkbox") {
       tempItem[target.id] = target.checked;
     } else tempItem[target.id] = target.value;
-    setItemDetails(tempItem);
+    setEntity(tempItem);
+    setSeo(tempItem);
+  };
+
+  const onGetImages = (file) => {
+    console.log(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+      const res = axios.post("https://localhost:44304/api/File/SigleUpload", formData, config);
+      console.log(res);
+    } catch (ex) {
+      console.log(ex);
+    }
   };
 
   const seoInfoPanel = () => {
-    if (hasSeo && itemDetails) {
+    if (hasSeo) {
       return (
         <GridItem xs={12} sm={12} md={6}>
           <Card id="seoSecion">
@@ -110,9 +135,7 @@ export default function DynamicRenderForm(props) {
                 return (
                   <GridContainer key={index}>
                     {row.map((col, index) => {
-                      let colVal = itemDetails
-                        ? itemDetails[col.apiText] || ""
-                        : "";
+                      let colVal = seo ? seo[col.apiText] || "" : "";
                       return (
                         <GridItem xs={12} sm={12} md={col.col} key={index}>
                           <CustomInput
@@ -143,40 +166,41 @@ export default function DynamicRenderForm(props) {
   };
 
   const contentInfoPanel = () => {
-    //if (Object.keys(itemDetails).length) {
-      return rows.map((row, index) => {
-        return (
-          <GridContainer key={index}>
-            {row.map((col, index) => {
-              let colVal = itemDetails ? itemDetails[col.apiText] || "" : "";
-              return (
-                <GridItem xs={12} sm={12} md={col.col} key={index}>
-                  <CustomInput
-                    value={colVal}
-                    labelText={col.label}
-                    id={col.id}
-                    name={col.name}
-                    type={col.type}
-                    dataSource={col.dataSource}
-                    validations={col.validations}
-                    dataType={col.dataType}
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    onChange={onChange}
-                  />
-                </GridItem>
-              );
-            })}
-          </GridContainer>
-        );
-      });
+    //if (Object.keys(entry).length) {
+    return rows.map((row, index) => {
+      return (
+        <GridContainer key={index}>
+          {row.map((col, index) => {
+            let colVal = entity ? entity[col.apiText] || "" : "";
+            return (
+              <GridItem xs={12} sm={12} md={col.col} key={index}>
+                <CustomInput
+                  value={colVal}
+                  labelText={col.label}
+                  id={col.id}
+                  name={col.name}
+                  type={col.type}
+                  dataSource={col.dataSource}
+                  validations={col.validations}
+                  dataType={col.dataType}
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  onChange={onChange}
+                  onGetImages={onGetImages}
+                />
+              </GridItem>
+            );
+          })}
+        </GridContainer>
+      );
+    });
     //}
   };
 
   return (
     <Fragment>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} encType="multipart/form-data">
         <GridContainer>
           <GridItem xs={12} sm={12} md={hasSeo ? 6 : 12}>
             <Card>

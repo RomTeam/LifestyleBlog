@@ -112,6 +112,14 @@ export const UserActionConfig = {
           url: null,
         },
       },
+      {
+        label: "Avatar",
+        type: "file",
+        name: "Avatar",
+        id: "avatar",
+        col: 4,
+        apiText: "avatar",
+      }
     ],
   ],
 };

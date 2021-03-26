@@ -57,11 +57,15 @@ const useStyles = makeStyles(styles);
 
 export default function DynamicRenderDetails(props) {
   let params = useParams();
-  let [sources, setSource] = useState({});
+  let [entry, setEntry] = useState({});
+  let [seo, setSeo] = useState({});
   useEffect(() => {
     callApi(`${apis.details}\\${params.id}`)
       .then((res) => {
-        setSource(res.data.data);
+        console.log(res);
+        setEntry(res.data.entry);
+        console.log(res.data.seo);
+        setSeo(res.data.seo);
       })
       .catch((err) => {
         console.log(err);
@@ -84,19 +88,17 @@ export default function DynamicRenderDetails(props) {
           </CardHeader>
           <CardBody>
             {SeoConfig.SeoDetailsConfig.columns.map((col, idx) => {
-              if (typeof sources[col.colData] === "boolean") {
-                console.log(sources[col.colData]);
-              }
-              if (!col.isNotShow) {
-                console.log(sources);
-                return (
-                  <div className={classes.typo} key={idx}>
-                    <div className={classes.note}>{col.colTitle}</div>
-                    <div className={classes.noteContent}>
-                      {sources[col.colData] ?? "N/A"}
+              if (seo) {
+                if (!col.isNotShow) {
+                  return (
+                    <div className={classes.typo} key={idx}>
+                      <div className={classes.note}>{col.colTitle}</div>
+                      <div className={classes.noteContent}>
+                        {seo[col.colData] ?? "N/A"}
+                      </div>
                     </div>
-                  </div>
-                );
+                  );
+                }
               }
             })}
           </CardBody>
@@ -106,9 +108,8 @@ export default function DynamicRenderDetails(props) {
   };
 
   const getDisplay = (col) => {
-    
-    if (Object.entries(sources).length != 0) {
-      let val = sources[col.colData];
+    if (entry != null) {
+      let val = entry[col.colData];
       switch (col.type) {
         case Constant.DisplayType.checkBox: {
           return val ? (
@@ -118,7 +119,7 @@ export default function DynamicRenderDetails(props) {
           );
         }
         case Constant.DisplayType.dateTime: {
-          return (new Date(val)).toString();
+          return new Date(val).toString();
         }
         default: {
           return val ?? "N/A";

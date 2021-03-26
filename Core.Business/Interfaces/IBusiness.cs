@@ -1,4 +1,5 @@
 ﻿using Core.Common;
+using Core.Domain.Models;
 using System.Collections.Generic;
 
 namespace Core.Business.Interfaces
@@ -10,6 +11,6 @@ namespace Core.Business.Interfaces
         ApiResponse<T> GetById(ApiRequest<int> apiRequest);
         ApiResponse<int> Delete(ApiRequest<int> apiRequest);
         ApiResponse<string> AddUpdate(ApiRequest<T> apiRequest);
-        
+        ApiResponse<Seo> GetSeoInfo(int categoryId, int newsId);
     }
 }

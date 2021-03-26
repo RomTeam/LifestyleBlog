@@ -82,7 +82,7 @@ export default function DynamicRenderList(props) {
           <CardHeader color="info">
             <GridContainer>
               <GridItem xs={12} sm={12} md={8}>
-                <h4 className={classes.cardTitleWhite}>Category List</h4>
+                <h4 className={classes.cardTitleWhite}>{config.title}</h4>
                 <Link to={config.url.addupdate}>
                   <p className={classes.cardCategoryWhite}>
                     Click here to create new

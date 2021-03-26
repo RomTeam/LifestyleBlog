@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import routes from "./route";
+//import routes from "./route";
 import { Switch, Route, Router, Redirect, BrowserRouter } from "react-router-dom";
 import * as Theme from "./themes/theme";
 import { ThemeProvider } from "@material-ui/styles";

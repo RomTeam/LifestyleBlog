@@ -1,6 +1,7 @@
 ﻿using Core.Business.Interfaces;
 using Core.Common;
 using Core.DAL;
+using Core.Domain.Models;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -85,6 +86,18 @@ namespace Core.Business
             {
                 Status = StatusCode.Success,
                 Data = id.ToString(),
+            };
+        }
+
+        public ApiResponse<Seo> GetSeoInfo(int categoryId, int newsId)
+        {
+            ParameterCollection paramIn = new ParameterCollection();
+            paramIn.Add("@CategoryId", categoryId);
+            paramIn.Add("@NewsId", newsId);
+            return new ApiResponse<Seo>()
+            {
+                Status = StatusCode.Success,
+                Data = DataAccess.GetRecord("spp_SEO_GetByEntity", paramIn).To<Seo>(),
             };
         }
     }

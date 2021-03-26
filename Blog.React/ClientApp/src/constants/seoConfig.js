@@ -16,9 +16,9 @@ export const SeoActionConfig = {
       {
         label: "SEO Title",
         type: "text",
-        name: "title",
-        id: "title",
-        apiText: "title",
+        name: "Seotitle",
+        id: "seoTitle",
+        apiText: "seoTitle",
         col: 6,
       },
     ],
@@ -26,18 +26,18 @@ export const SeoActionConfig = {
       {
         label: "SEO Keywords",
         type: "text",
-        name: "Keywords",
-        id: "keywords",
+        name: "SeoKeywords",
+        id: "seoKeywords",
         col: 6,
-        apiText: "keywords",
+        apiText: "seoKeywords",
       },
       {
         label: "Tags",
         type: "text",
-        name: "Tags",
-        id: "tags",
+        name: "SeoTags",
+        id: "seoTags",
         col: 6,
-        apiText: "tags",
+        apiText: "seoTags",
       },
     ],
     [
@@ -96,9 +96,9 @@ export const SeoActionConfig = {
       {
         label: "SEO Description",
         type: "area",
-        name: "Description",
-        id: "description",
-        apiText: "description",
+        name: "SeoDescription",
+        id: "seoDescription",
+        apiText: "seoDescription",
         col: 12,
       },
     ],
@@ -114,19 +114,19 @@ export const SeoDetailsConfig = {
     },
     {
       colTitle: "Description",
-      colData: "description",
+      colData: "seoDescription",
     },
     {
       colTitle: "Title",
-      colData: "title",
+      colData: "seoTitle",
     },
     {
       colTitle: "Keywords",
-      colData: "keywords",
+      colData: "seoKeywords",
     },
     {
       colTitle: "Tags",
-      colData: "tags",
+      colData: "seoTags",
     },
     
     {

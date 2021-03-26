@@ -46,8 +46,9 @@ namespace Blog.React.Controllers
             {
                 Body = id
             };
-            ApiResponse<CategoryViewModel> response = _category.GetById(apiRequest);
-            return Ok(response);
+            ApiResponse<CategoryViewModel> category = _category.GetById(apiRequest);
+            ApiResponse<Seo> seoInfo = _category.GetSeoInfo(id, 0);
+            return Ok(new { entry = category.Data, seo = seoInfo.Data });
         }
 
         [HttpPost]

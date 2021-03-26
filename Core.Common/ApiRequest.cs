@@ -23,4 +23,5 @@ namespace Core.Common
     {
         public string Token { get; set; }
     }
+
 }

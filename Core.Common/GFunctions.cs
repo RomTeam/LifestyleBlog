@@ -63,5 +63,22 @@ namespace Core.Common
             }
             return ts;
         }
+
+        public static void Map<TSource, TDes>(this TSource source, TDes des)
+        {
+            IEnumerable<PropertyInfo> sPropertyInfos = typeof(TSource).GetProperties();
+            IEnumerable<PropertyInfo> dPropertyInfos = typeof(TDes).GetProperties();
+            foreach (var sPropertyInfo in sPropertyInfos)
+            {
+                foreach (var dPropertyInfo in dPropertyInfos)
+                {
+                    if (sPropertyInfo.Name == dPropertyInfo.Name && sPropertyInfo.PropertyType == dPropertyInfo.PropertyType)
+                    {
+                        dPropertyInfo.SetValue(des, sPropertyInfo.GetValue(source));
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

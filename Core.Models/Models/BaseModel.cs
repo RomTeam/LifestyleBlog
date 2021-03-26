@@ -13,5 +13,7 @@ namespace Core.Domain.Models
         public DateTime CreatedDate { get; set; }
         public bool IsShow { get; set; }
         public bool IsDelete { get; set; }
+        [IsParam(IsAddParam = false)]
+        public int SeoID { get; set; }
     }
 }

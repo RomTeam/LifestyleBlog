@@ -21,6 +21,13 @@ namespace Blog.React.Controllers
             _business = business;
         }
 
+        [HttpGet]
+        public IActionResult GetSeoInfo(int categoryId, int newsId)
+        {
+            ApiResponse<Seo> response = _business.GetSeoInfo(categoryId, newsId);
+            return Ok(response);
+        }
+
         [HttpPost]
         public IActionResult AddUpdate(Seo seo)
         {

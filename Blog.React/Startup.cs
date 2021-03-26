@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using System;
+using Microsoft.Net.Http.Headers;
 
 namespace Blog.React
 {
@@ -37,6 +38,8 @@ namespace Blog.React
             services.AddSingleton<IBusiness<Seo>, BaseBusiness<Seo>>();
 
             services.AddSingleton<IUsers<UsersViewModel>, UsersBusiness>();
+
+            services.AddSingleton<INews<NewsViewModel>, NewsBusiness>();
 
             services.AddControllersWithViews();
 

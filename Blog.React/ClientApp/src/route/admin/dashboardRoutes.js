@@ -7,6 +7,9 @@ import CategoryDetails from "../../views/admin/categoryDetails";
 import Users from "../../views/admin/users";
 import UserDetails from "../../views/admin/userDetails";
 import UserActions from "../../views/admin/userActions";
+import News from "../../views/admin/news";
+import NewsActions from "../../views/admin/newsActions";
+import NewsDetails from "../../views/admin/newsDetails";
 const dashboardRoutes = [
   {
     path: "/dashboard",
@@ -16,6 +19,7 @@ const dashboardRoutes = [
     layout: "/admin",
     isShow: true
   },
+  //Category config
   {
     path: "/category/details/:id",
     name: "Category Details",
@@ -48,6 +52,40 @@ const dashboardRoutes = [
     layout: "/admin",
     isShow: true
   },
+  //News config
+  {
+    path: "/news/details/:id",
+    name: "News Details",
+    icon: Person,
+    component: NewsDetails,
+    layout: "/admin",
+    isShow: false
+  },
+  {
+    path: "/news/addupdate/:id",
+    name: "Add/Update News",
+    icon: Person,
+    component: NewsActions,
+    layout: "/admin",
+    isShow: false
+  },
+  {
+    path: "/news/addupdate",
+    name: "Add/Update News",
+    icon: Person,
+    component: NewsActions,
+    layout: "/admin",
+    isShow: false
+  },
+  {
+    path: "/news",
+    name: "News",
+    icon: Person,
+    component: News,
+    layout: "/admin",
+    isShow: true
+  },
+  //Users config
   {
     path: "/users/details/:id",
     name: "User Details",
@@ -80,6 +118,7 @@ const dashboardRoutes = [
     layout: "/admin",
     isShow: true
   }
+  
 ];
 
 export default dashboardRoutes;

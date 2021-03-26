@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Business.Interfaces;
 using Core.Common;
 using Core.Domain.Models;
 using Core.Domain.ViewModels;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.React.Controllers
 {
     [Route("api/[controller]/[action]/{id?}")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class NewsController : ControllerBase
     {
-        private IUsers<UsersViewModel> _users;
-        public UsersController(IUsers<UsersViewModel> users)
+        private INews<NewsViewModel> _News;
+        private IWebHostEnvironment _hostingEnvironment;
+        public NewsController(INews<NewsViewModel> cateogory, IWebHostEnvironment environment)
         {
-            _users = users;
+            _News = cateogory;
+            _hostingEnvironment = environment;
         }
         [HttpPost]
         public IActionResult GetAll(Pagination paging)
@@ -29,9 +30,9 @@ namespace Blog.React.Controllers
                 Paging = paging,
                 Body = paging.SearchText
             };
-            ApiResponse<List<UsersViewModel>> response = _users.GetAll(apiRequest, out int totalRows);
-            var users = response.Data;
-            return Ok(new { users, totalRows });
+            ApiResponse<List<NewsViewModel>> response = _News.GetAll(apiRequest, out int totalRows);
+            var newses = response.Data;
+            return Ok(new { newses, totalRows });
         }
 
         [HttpGet]
@@ -41,20 +42,20 @@ namespace Blog.React.Controllers
             {
                 Body = id
             };
-            ApiResponse<UsersViewModel> response = _users.GetById(apiRequest);
-            return Ok(new { entry= response.Data});
+            ApiResponse<NewsViewModel> newsInfo = _News.GetById(apiRequest);
+            ApiResponse<Seo> seoInfo = _News.GetSeoInfo(0, id);
+            return Ok(new { entry = newsInfo.Data, seo = seoInfo.Data});
         }
 
         [HttpPost]
-        public IActionResult AddUpdate(UsersViewModel users)
+        public IActionResult AddUpdate(NewsViewModel news)
         {
-            users.Password = "123456";
-            users.Avatar = "avatar.jpg";
-            ApiRequest<UsersViewModel> apiRequest = new ApiRequest<UsersViewModel>()
+            news.CreatedBy = 1;
+            ApiRequest<NewsViewModel> apiRequest = new ApiRequest<NewsViewModel>()
             {
-                Body = users
+                Body = news
             };
-            ApiResponse<string> response = _users.AddUpdate(apiRequest);
+            ApiResponse<string> response = _News.AddUpdate(apiRequest);
             return Ok(response);
         }
 
@@ -65,7 +66,7 @@ namespace Blog.React.Controllers
             {
                 Body = id
             };
-            return Ok(_users.Delete(apiRequest));
+            return Ok(_News.Delete(apiRequest));
         }
     }
 }
